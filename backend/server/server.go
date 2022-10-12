@@ -24,6 +24,8 @@ func Create() *fiber.App {
 		ErrorHandler: func(ctx *fiber.Ctx, err error) error {
 			if e, ok := err.(*pkg.APIError); ok {
 				return ctx.Status(e.Status).JSON(e)
+			} else if e, ok := err.(*pkg.APIErrorData); ok {
+				return ctx.Status(e.Status).JSON(e)
 			} else if e, ok := err.(*fiber.Error); ok {
 				return ctx.Status(e.Code).JSON(pkg.APIError{Status: e.Code, Code: "internal-server", Message: e.Message})
 			} else {
