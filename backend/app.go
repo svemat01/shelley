@@ -29,6 +29,10 @@ func main() {
 		DB:       0,  // use default DB
 	})
 
+	if _, err := rdb.Ping(ctx).Result(); err != nil {
+		log.Fatal("Can't connect to redis")
+	}
+
 	data := pkg.MainData{
 		Redis:        rdb,
 		RedisContext: ctx,
