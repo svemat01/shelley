@@ -1,15 +1,13 @@
 package devices
 
 import (
-	"encoding/json"
-	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"github.com/svemat01/shelley/pkg"
 )
 
 type Device struct {
-	Name string `json:"name" validate:"required"`
-	Ip   string `json:"ip"`
+	Name string `json:"name" validate:"required" `
+	Ip   string `json:"ip" validate:"required"`
 }
 
 func createDeviceRoute(data pkg.MainData) func(c *fiber.Ctx) error {
@@ -22,14 +20,14 @@ func createDeviceRoute(data pkg.MainData) func(c *fiber.Ctx) error {
 
 		payload := new(Device)
 
+		// Parse JSON body
 		if err := c.BodyParser(payload); err != nil {
 			return err
 		}
-		err := pkg.ValidateStruct[Device](*payload)
-		fmt.Println(err)
-		if err != nil {
-			json, _ := json.Marshal(err)
-			return pkg.BadRequest(string(json))
+
+		// Validate payload
+		if err := pkg.ValidateStruct(*payload); err != nil {
+			return pkg.ValidatioError(err)
 		}
 
 		return c.JSON(payload)
