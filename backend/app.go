@@ -9,18 +9,22 @@ import (
 	"github.com/svemat01/shelley/server"
 	"github.com/svemat01/shelley/state"
 	"log"
+	"os"
 )
 
 var ctx = context.Background()
 
 func main() {
+	// Setup Env
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
 
+	// Setup redis
+	redisAddress := os.Getenv("REDIS_HOST")
 	rdb := redis.NewClient(&redis.Options{
-		Addr:     "jab-school:6379",
+		Addr:     redisAddress,
 		Password: "", // no password set
 		DB:       0,  // use default DB
 	})
