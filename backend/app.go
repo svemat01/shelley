@@ -37,7 +37,7 @@ func main() {
 		log.Fatal("Can't connect to redis")
 	}
 
-	data := pkg.MainData{
+	data := &pkg.MainData{
 		Redis:        rdb,
 		RedisContext: ctx,
 	}

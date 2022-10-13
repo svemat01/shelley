@@ -6,7 +6,7 @@ import (
 	"github.com/svemat01/shelley/pkg"
 )
 
-func Setup(app *fiber.App, data pkg.MainData) {
+func Setup(app *fiber.App, data *pkg.MainData) {
 	v1 := app.Group("/api/v1")
 
 	devices.SetupDevices(v1, data)

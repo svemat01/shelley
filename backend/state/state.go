@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-func Setup(data pkg.MainData) func() {
+func Setup(data *pkg.MainData) func() {
 
 	// Calling NewTicker method
 	Ticker := time.NewTicker(2 * time.Second)
@@ -30,11 +30,11 @@ func Setup(data pkg.MainData) func() {
 	}
 }
 
-func fetchState(data pkg.MainData) {
+func fetchState(data *pkg.MainData) {
 	redisDB.GetDevice(data.Redis, data.RedisContext, "12345")
 }
 
-func tickerLoop(ticker *time.Ticker, channel chan bool, data pkg.MainData) {
+func tickerLoop(ticker *time.Ticker, channel chan bool, data *pkg.MainData) {
 	// Using for loop
 	for {
 

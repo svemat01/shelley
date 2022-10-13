@@ -8,7 +8,7 @@ import (
 	"github.com/svemat01/shelley/redisDB"
 )
 
-func listDevicesRoute(data pkg.MainData) func(c *fiber.Ctx) error {
+func listDevicesRoute(data *pkg.MainData) func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		val, err := redisDB.GetDevices(data.Redis, data.RedisContext)
 		if err != nil {

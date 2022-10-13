@@ -5,7 +5,7 @@ import (
 	"github.com/svemat01/shelley/pkg"
 )
 
-func SetupDevices(router fiber.Router, data pkg.MainData) {
+func SetupDevices(router fiber.Router, data *pkg.MainData) {
 	router.Get("/devices/list", listDevicesRoute(data))
 
 	router.Get("/devices/:id", getDeviceRoute(data))
