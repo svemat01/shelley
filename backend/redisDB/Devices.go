@@ -6,6 +6,11 @@ import (
 	"strings"
 )
 
+type Device struct {
+	Name string `json:"name" validate:"required"`
+	Ip   string `json:"ip" validate:"required,ip"`
+}
+
 func GetDevices(Redis *redis.Client, RedisContext context.Context) ([]string, error) {
 	val, err := Redis.Keys(RedisContext, "device:*").Result()
 	if err != nil {
@@ -28,4 +33,14 @@ func GetDevice(Redis *redis.Client, RedisContext context.Context, key string) (m
 	}
 
 	return val, nil
+}
+
+func CreateDevice(Redis *redis.Client, RedisContext context.Context, key string, device Device) error {
+	_, err := Redis.HSet(RedisContext, "device:"+key, "name", device.Name, "ip", device.Ip).Result()
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

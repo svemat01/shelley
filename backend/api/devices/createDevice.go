@@ -3,14 +3,11 @@ package devices
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/svemat01/shelley/pkg"
+	"github.com/svemat01/shelley/redisDB"
+	"strconv"
 )
 
-type Device struct {
-	Name string `json:"name" validate:"required" `
-	Ip   string `json:"ip" validate:"required"`
-}
-
-func createDeviceRoute(data pkg.MainData) func(c *fiber.Ctx) error {
+func createDeviceRoute(data *pkg.MainData) func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		contentType := c.Get("Content-Type")
 
@@ -18,11 +15,11 @@ func createDeviceRoute(data pkg.MainData) func(c *fiber.Ctx) error {
 			return pkg.BadRequest("Content-Type must be application/json")
 		}
 
-		payload := new(Device)
+		payload := new(redisDB.Device)
 
 		// Parse JSON body
 		if err := c.BodyParser(payload); err != nil {
-			return err
+			return pkg.BadRequest("Invalid JSON")
 		}
 
 		// Validate payload
@@ -30,6 +27,20 @@ func createDeviceRoute(data pkg.MainData) func(c *fiber.Ctx) error {
 			return pkg.ValidatioError(err)
 		}
 
-		return c.JSON(payload)
+		id, err := pkg.SonyFlake.NextID()
+
+		if err != nil {
+			return pkg.Unexpected("ID generation error")
+		}
+
+		err = redisDB.CreateDevice(data.Redis, data.RedisContext, strconv.FormatUint(id, 10), *payload)
+
+		if err != nil {
+			return pkg.Unexpected("Error creating device")
+		}
+
+		return c.JSON(fiber.Map{
+			"device_id": id,
+		})
 	}
 }
