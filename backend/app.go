@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/go-redis/redis/v9"
 	"github.com/joho/godotenv"
+	"github.com/sony/sonyflake"
 	"github.com/svemat01/shelley/api"
 	"github.com/svemat01/shelley/pkg"
 	"github.com/svemat01/shelley/server"
@@ -20,6 +21,9 @@ func main() {
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
+
+	// Setup ID Generator
+	pkg.SonyFlake = sonyflake.NewSonyflake(sonyflake.Settings{})
 
 	// Setup redis
 	redisAddress := os.Getenv("REDIS_HOST")

@@ -7,6 +7,7 @@ require (
 	github.com/go-redis/redis/v9 v9.0.0-beta.2
 	github.com/gofiber/fiber/v2 v2.38.1
 	github.com/joho/godotenv v1.4.0
+	github.com/sony/sonyflake v1.1.0
 )
 
 require (
