@@ -2,12 +2,11 @@ package state
 
 import (
 	"fmt"
-	"github.com/svemat01/shelley/pkg"
 	"github.com/svemat01/shelley/redisDB"
 	"time"
 )
 
-func Setup(data *pkg.MainData) func() {
+func Setup() func() {
 
 	// Calling NewTicker method
 	Ticker := time.NewTicker(2 * time.Second)
@@ -16,7 +15,7 @@ func Setup(data *pkg.MainData) func() {
 	// keyword
 	mychannel := make(chan bool)
 
-	go tickerLoop(Ticker, mychannel, data)
+	go tickerLoop(Ticker, mychannel)
 
 	return func() {
 		// Calling Stop() method
@@ -30,11 +29,11 @@ func Setup(data *pkg.MainData) func() {
 	}
 }
 
-func fetchState(data *pkg.MainData) {
-	redisDB.GetDevice(data.Redis, data.RedisContext, "12345")
+func fetchState() {
+	redisDB.GetDevice("12345")
 }
 
-func tickerLoop(ticker *time.Ticker, channel chan bool, data *pkg.MainData) {
+func tickerLoop(ticker *time.Ticker, channel chan bool) {
 	// Using for loop
 	for {
 
@@ -47,7 +46,7 @@ func tickerLoop(ticker *time.Ticker, channel chan bool, data *pkg.MainData) {
 
 		// Case to print current time
 		case <-ticker.C:
-			fetchState(data)
+			fetchState()
 		}
 	}
 }

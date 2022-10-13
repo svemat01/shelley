@@ -8,9 +8,9 @@ import (
 	"github.com/svemat01/shelley/redisDB"
 )
 
-func listDevicesRoute(data *pkg.MainData) func(c *fiber.Ctx) error {
+func listDevicesRoute() func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
-		val, err := redisDB.GetDevices(data.Redis, data.RedisContext)
+		val, err := redisDB.GetDevices()
 		if err != nil {
 			if err == redis.Nil {
 				return pkg.NotFound("[] nil")

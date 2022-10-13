@@ -1,8 +1,6 @@
 package redisDB
 
 import (
-	"context"
-	"github.com/go-redis/redis/v9"
 	"strings"
 )
 
@@ -11,8 +9,8 @@ type Device struct {
 	Ip   string `json:"ip" validate:"required,ip"`
 }
 
-func GetDevices(Redis *redis.Client, RedisContext context.Context) ([]string, error) {
-	val, err := Redis.Keys(RedisContext, "device:*").Result()
+func GetDevices() ([]string, error) {
+	val, err := RedisClient.Keys(RedisContext, "device:*").Result()
 	if err != nil {
 		return []string{}, err
 	}
@@ -25,8 +23,8 @@ func GetDevices(Redis *redis.Client, RedisContext context.Context) ([]string, er
 	return keys, nil
 }
 
-func GetDevice(Redis *redis.Client, RedisContext context.Context, key string) (map[string]string, error) {
-	val, err := Redis.HGetAll(RedisContext, "device:"+key).Result()
+func GetDevice(key string) (map[string]string, error) {
+	val, err := RedisClient.HGetAll(RedisContext, "device:"+key).Result()
 
 	if err != nil {
 		return map[string]string{}, nil
@@ -35,8 +33,8 @@ func GetDevice(Redis *redis.Client, RedisContext context.Context, key string) (m
 	return val, nil
 }
 
-func CreateDevice(Redis *redis.Client, RedisContext context.Context, key string, device Device) error {
-	_, err := Redis.HSet(RedisContext, "device:"+key, "name", device.Name, "ip", device.Ip).Result()
+func CreateDevice(key string, device Device) error {
+	_, err := RedisClient.HSet(RedisContext, "device:"+key, "name", device.Name, "ip", device.Ip).Result()
 
 	if err != nil {
 		return err

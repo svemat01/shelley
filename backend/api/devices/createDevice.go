@@ -7,7 +7,7 @@ import (
 	"strconv"
 )
 
-func createDeviceRoute(data *pkg.MainData) func(c *fiber.Ctx) error {
+func createDeviceRoute() func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		contentType := c.Get("Content-Type")
 
@@ -33,7 +33,7 @@ func createDeviceRoute(data *pkg.MainData) func(c *fiber.Ctx) error {
 			return pkg.Unexpected("ID generation error")
 		}
 
-		err = redisDB.CreateDevice(data.Redis, data.RedisContext, strconv.FormatUint(id, 10), *payload)
+		err = redisDB.CreateDevice(strconv.FormatUint(id, 10), *payload)
 
 		if err != nil {
 			return pkg.Unexpected("Error creating device")
