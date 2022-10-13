@@ -33,8 +33,28 @@ func GetDevice(key string) (map[string]string, error) {
 	return val, nil
 }
 
+func ExistsDevice(key string) (bool, error) {
+	val, err := RedisClient.Exists(RedisContext, "device:"+key).Result()
+
+	if err != nil {
+		return false, err
+	}
+
+	return val == 1, nil
+}
+
 func CreateDevice(key string, device Device) error {
 	_, err := RedisClient.HSet(RedisContext, "device:"+key, "name", device.Name, "ip", device.Ip).Result()
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func DeleteDevice(key string) error {
+	_, err := RedisClient.Del(RedisContext, "device:"+key).Result()
 
 	if err != nil {
 		return err

@@ -10,4 +10,6 @@ func SetupDevices(router fiber.Router) {
 	router.Get("/devices/:id", getDeviceRoute())
 
 	router.Post("/devices/create", createDeviceRoute())
+
+	router.Delete("/devices/:id", deleteDeviceRoute())
 }
