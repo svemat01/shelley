@@ -6,6 +6,11 @@ import (
 	"time"
 )
 
+type DeviceState struct {
+	State      bool
+	Brightness int
+}
+
 func Setup() func() {
 
 	// Calling NewTicker method
@@ -29,8 +34,8 @@ func Setup() func() {
 	}
 }
 
-func fetchState() {
-	redisDB.GetDevice("12345")
+func fetchState(device redisDB.Device) {
+
 }
 
 func tickerLoop(ticker *time.Ticker, channel chan bool) {
@@ -46,7 +51,22 @@ func tickerLoop(ticker *time.Ticker, channel chan bool) {
 
 		// Case to print current time
 		case <-ticker.C:
-			fetchState()
+			devices, err := redisDB.GetDevices()
+
+			if err != nil {
+				fmt.Println(err)
+				return
+			}
+
+			for _, deviceId := range devices {
+				_, err := redisDB.GetDevice(deviceId)
+
+				if err != nil {
+					fmt.Println(err)
+					return
+				}
+
+			}
 		}
 	}
 }

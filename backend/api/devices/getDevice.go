@@ -10,6 +10,17 @@ import (
 func getDeviceRoute() func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		key := c.Params("id")
+
+		exists, err := redisDB.ExistsDevice(key)
+
+		if err != nil {
+			return pkg.Unexpected("Failed")
+		}
+
+		if !exists {
+			return pkg.NotFound("Device not found")
+		}
+
 		val, err := redisDB.GetDevice(key)
 
 		switch {

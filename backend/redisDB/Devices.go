@@ -1,12 +1,15 @@
 package redisDB
 
 import (
+	"github.com/go-redis/redis/v9"
+	"log"
 	"strings"
 )
 
 type Device struct {
 	Name string `json:"name" validate:"required"`
 	Ip   string `json:"ip" validate:"required,ip"`
+	Type string `json:"type" validate:"required"`
 }
 
 func GetDevices() ([]string, error) {
@@ -23,14 +26,26 @@ func GetDevices() ([]string, error) {
 	return keys, nil
 }
 
-func GetDevice(key string) (map[string]string, error) {
+func GetDevice(key string) (Device, error) {
 	val, err := RedisClient.HGetAll(RedisContext, "device:"+key).Result()
 
 	if err != nil {
-		return map[string]string{}, nil
+		log.Println(err)
+		return Device{}, err
 	}
 
-	return val, nil
+	// If val is empty, the device doesn't exist
+	if len(val) == 0 {
+		return Device{}, redis.Nil
+	}
+
+	device := Device{
+		Name: val["name"],
+		Ip:   val["ip"],
+		Type: val["type"],
+	}
+
+	return device, nil
 }
 
 func ExistsDevice(key string) (bool, error) {
@@ -44,7 +59,13 @@ func ExistsDevice(key string) (bool, error) {
 }
 
 func CreateDevice(key string, device Device) error {
-	_, err := RedisClient.HSet(RedisContext, "device:"+key, "name", device.Name, "ip", device.Ip).Result()
+	_, err := RedisClient.HSet(
+		RedisContext,
+		"device:"+key,
+		"name", device.Name,
+		"ip", device.Ip,
+		"type", device.Type,
+	).Result()
 
 	if err != nil {
 		return err
