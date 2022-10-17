@@ -1,8 +1,11 @@
 package state
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/svemat01/shelley/redisDB"
+	"github.com/svemat01/shelley/shelly"
+	"log"
 	"time"
 )
 
@@ -59,13 +62,18 @@ func tickerLoop(ticker *time.Ticker, channel chan bool) {
 			}
 
 			for _, deviceId := range devices {
-				_, err := redisDB.GetDevice(deviceId)
+				device, err := redisDB.GetDevice(deviceId)
 
 				if err != nil {
 					fmt.Println(err)
-					return
+					continue
 				}
 
+				response, err := shelly.GetDeviceState(device.Ip, device)
+
+				jsonResponse, _ := json.Marshal(response)
+				// TODO set state in redis
+				log.Printf("Device: %s state: %s\n", deviceId, string(jsonResponse))
 			}
 		}
 	}

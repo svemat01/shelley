@@ -2,6 +2,7 @@ package pkg
 
 import (
 	"github.com/go-playground/validator/v10"
+	"github.com/svemat01/shelley/shelly"
 	"log"
 	"reflect"
 	"strings"
@@ -26,7 +27,24 @@ func init() {
 		return name
 	})
 
+	err := validate.RegisterValidation("shellyType", shellyType)
+
+	if err != nil {
+		log.Panicln(err)
+	}
+
 	log.Println("Validator initialized")
+}
+
+// Custom Validators
+func shellyType(fl validator.FieldLevel) bool {
+	field := fl.Field().String()
+
+	log.Println(field)
+
+	_, exists := shelly.DeviceTypes[field]
+
+	return exists
 }
 
 func ValidateStruct(data interface{}) []*ErrorResponse {

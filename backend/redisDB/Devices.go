@@ -9,7 +9,7 @@ import (
 type Device struct {
 	Name string `json:"name" validate:"required"`
 	Ip   string `json:"ip" validate:"required,ip"`
-	Type string `json:"type" validate:"required"`
+	Type string `json:"type" validate:"required,shellyType"`
 }
 
 func GetDevices() ([]string, error) {

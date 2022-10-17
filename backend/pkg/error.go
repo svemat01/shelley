@@ -12,22 +12,6 @@ func (e *APIError) Error() string {
 	return e.Message
 }
 
-type APIErrorData struct {
-	Status int         `json:"status"`
-	Code   string      `json:"code"`
-	Data   interface{} `json:"data"`
-}
-
-func (e *APIErrorData) Error() string {
-	data, err := json.Marshal(e.Data)
-	
-	if err != nil {
-		return err.Error()
-	}
-
-	return string(data)
-}
-
 func NotFound(m string) *APIError {
 	return &APIError{Status: 404, Code: "not-found", Message: m}
 }
@@ -42,4 +26,22 @@ func ValidatioError(errors []*ErrorResponse) *APIErrorData {
 
 func Unexpected(m string) *APIError {
 	return &APIError{Status: 500, Code: "internal-server", Message: m}
+}
+
+// --------------------------------------------
+
+type APIErrorData struct {
+	Status int         `json:"status"`
+	Code   string      `json:"code"`
+	Data   interface{} `json:"data"`
+}
+
+func (e *APIErrorData) Error() string {
+	data, err := json.Marshal(e.Data)
+
+	if err != nil {
+		return err.Error()
+	}
+
+	return string(data)
 }
