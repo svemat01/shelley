@@ -32,3 +32,20 @@ func SetSwitchState(deviceId string, switchIndex string, state bool) error {
 		return InvalidShellyType(device.Type)
 	}
 }
+
+func SetLightState(deviceId string, lightIndex string, state bool, brightness int) error {
+	device, err := redisDB.GetDevice(deviceId)
+
+	if err != nil {
+		return err
+	}
+
+	deviceSpec := pkg.DeviceTypes[device.Type]
+
+	switch deviceSpec.Protocol {
+	case "RPC":
+		return SetLightStateRPC(device.Ip, lightIndex, state, brightness)
+	default:
+		return InvalidShellyType(device.Type)
+	}
+}

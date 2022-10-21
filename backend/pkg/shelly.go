@@ -3,15 +3,22 @@ package pkg
 type DeviceSpec struct {
 	Protocol    string `json:"protocol"`
 	SwitchCount int    `json:"switch_count"`
+	LightCount  int    `json:"light_count"`
 }
 
 type SwitchState struct {
-	Online bool `json:"online"`
-	IsOn   bool `json:"ison"`
+	IsOn bool `json:"ison"`
+}
+
+type LightState struct {
+	IsOn       bool `json:"ison"`
+	Brightness int  `json:"brightness"`
 }
 
 type DeviceState struct {
+	Online   bool          `json:"online"`
 	Switches []SwitchState `json:"switches"`
+	Lights   []LightState  `json:"lights"`
 }
 
 // map of device types to their respective structs

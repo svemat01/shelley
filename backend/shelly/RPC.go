@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/svemat01/shelley/pkg"
 	"io"
+	"log"
 	"net/http"
 	"time"
 )
@@ -53,6 +54,7 @@ func rpcGet(data RpcGetRequestArgs, response *map[string]interface{}) error {
 }
 
 func GetDeviceStateRPC(baseUrl string, spec pkg.DeviceSpec) (pkg.DeviceState, error) {
+	// Fetch Switches
 	switches := make([]pkg.SwitchState, spec.SwitchCount)
 	for i := 0; i < spec.SwitchCount; i++ {
 		var response map[string]interface{}
@@ -62,22 +64,42 @@ func GetDeviceStateRPC(baseUrl string, spec pkg.DeviceSpec) (pkg.DeviceState, er
 			Args:   fmt.Sprintf("?id=%d", i),
 		}, &response)
 		if err != nil {
-			switches[i] = pkg.SwitchState{
+			return pkg.DeviceState{
 				Online: false,
-			}
-			continue
+			}, nil
 		}
 
-		//fmt.Printf("client: response: %v\n", response)
-
 		switches[i] = pkg.SwitchState{
-			Online: true,
-			IsOn:   response["output"].(bool),
+			IsOn: response["output"].(bool),
 		}
 	}
 
+	// Fetch Lights
+	lights := make([]pkg.LightState, 0)
+	for i := 0; i < spec.LightCount; i++ {
+		log.Printf("light %d", i)
+		var response map[string]interface{}
+		err := rpcGet(RpcGetRequestArgs{
+			Ip:     baseUrl,
+			Method: "Light.GetStatus",
+			Args:   fmt.Sprintf("?id=%d", i),
+		}, &response)
+		if err != nil {
+			return pkg.DeviceState{
+				Online: false,
+			}, nil
+		}
+
+		lights = append(lights, pkg.LightState{
+			IsOn:       response["ison"].(bool),
+			Brightness: int(response["brightness"].(float64)),
+		})
+	}
+
 	return pkg.DeviceState{
+		Online:   true,
 		Switches: switches,
+		Lights:   lights,
 	}, nil
 }
 
@@ -95,4 +117,22 @@ func SetSwitchStateRPC(baseUrl string, switchIndex string, state bool) error {
 	//fmt.Printf("client: response: %v\n", response)
 
 	return nil
+}
+
+func SetLightStateRPC(baseUrl string, lightIndex string, state bool, brightness int) error {
+	var response map[string]interface{}
+	args := RpcGetRequestArgs{
+		Ip:     baseUrl,
+		Method: "Light.Set",
+	}
+
+	if brightness == 0 {
+		args.Args = fmt.Sprintf("?id=%s&ison=%t", lightIndex, state)
+	} else {
+		args.Args = fmt.Sprintf("?id=%s&ison=%t&brightness=%d", lightIndex, state, brightness)
+	}
+
+	err := rpcGet(args, &response)
+
+	return err
 }
