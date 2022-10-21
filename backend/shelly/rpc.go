@@ -11,10 +11,6 @@ import (
 	"time"
 )
 
-type Args struct {
-	A, B int
-}
-
 type RpcGetRequestArgs struct {
 	Ip     string
 	Method string
@@ -124,12 +120,11 @@ func SetLightStateRPC(baseUrl string, lightIndex string, state bool, brightness 
 	args := RpcGetRequestArgs{
 		Ip:     baseUrl,
 		Method: "Light.Set",
+		Args:   fmt.Sprintf("?id=%s&on=%t", lightIndex, state),
 	}
 
-	if brightness == 0 {
-		args.Args = fmt.Sprintf("?id=%s&ison=%t", lightIndex, state)
-	} else {
-		args.Args = fmt.Sprintf("?id=%s&ison=%t&brightness=%d", lightIndex, state, brightness)
+	if brightness != 0 {
+		args.Args += fmt.Sprintf("&brightness=%d", brightness)
 	}
 
 	err := rpcGet(args, &response)
