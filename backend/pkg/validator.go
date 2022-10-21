@@ -1,8 +1,8 @@
 package pkg
 
 import (
+	"fmt"
 	"github.com/go-playground/validator/v10"
-	"github.com/svemat01/shelley/shelly"
 	"log"
 	"reflect"
 	"strings"
@@ -42,7 +42,7 @@ func shellyType(fl validator.FieldLevel) bool {
 
 	log.Println(field)
 
-	_, exists := shelly.DeviceTypes[field]
+	_, exists := DeviceTypes[field]
 
 	return exists
 }
@@ -55,7 +55,7 @@ func ValidateStruct(data interface{}) []*ErrorResponse {
 			var element ErrorResponse
 			element.Field = err.Field()
 			element.Reason = err.Tag()
-			element.Value = err.Value().(string)
+			element.Value = fmt.Sprintf("%v", err.Value())
 			errors = append(errors, &element)
 		}
 	}
