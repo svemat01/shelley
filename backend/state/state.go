@@ -1,23 +1,18 @@
 package state
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/svemat01/shelley/redisDB"
 	"github.com/svemat01/shelley/shelly"
 	"log"
+	"sync"
 	"time"
 )
-
-type DeviceState struct {
-	State      bool
-	Brightness int
-}
 
 func Setup() func() {
 
 	// Calling NewTicker method
-	Ticker := time.NewTicker(2 * time.Second)
+	Ticker := time.NewTicker(5 * time.Second)
 
 	// Creating channel using make
 	// keyword
@@ -61,20 +56,37 @@ func tickerLoop(ticker *time.Ticker, channel chan bool) {
 				return
 			}
 
+			wg := sync.WaitGroup{}
+			wg.Add(len(devices))
+			log.Printf("Found %d devices", len(devices))
+
 			for _, deviceId := range devices {
-				device, err := redisDB.GetDevice(deviceId)
+				log.Printf("Fetching state for device %s", deviceId)
+				go func(deviceId string) {
+					device, err := redisDB.GetDevice(deviceId)
 
-				if err != nil {
-					fmt.Println(err)
-					continue
-				}
+					if err != nil {
+						fmt.Println(err)
+						wg.Done()
+						return
+					}
 
-				response, err := shelly.GetDeviceState(device.Ip, device)
+					state, err := shelly.GetDeviceState(device)
 
-				jsonResponse, _ := json.Marshal(response)
-				// TODO set state in redis
-				log.Printf("Device: %s state: %s\n", deviceId, string(jsonResponse))
+					err = redisDB.SetDeviceState(deviceId, state)
+
+					if err != nil {
+						fmt.Println(err)
+						wg.Done()
+						return
+					}
+
+					wg.Done()
+				}(deviceId)
 			}
+
+			log.Printf("Waiting for all devices to be fetched")
+			wg.Wait()
 		}
 	}
 }

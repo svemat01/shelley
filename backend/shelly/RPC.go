@@ -1,10 +1,13 @@
 package shelly
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/svemat01/shelley/pkg"
 	"io"
 	"net/http"
+	"time"
 )
 
 type Args struct {
@@ -26,7 +29,11 @@ func rpcGet(data RpcGetRequestArgs, response *map[string]interface{}) error {
 		return err
 	}
 
-	res, err := http.DefaultClient.Do(req)
+	//
+	ctx, cancel := context.WithTimeout(context.Background(), 1000*time.Millisecond)
+	defer cancel()
+
+	res, err := http.DefaultClient.Do(req.WithContext(ctx))
 	if err != nil {
 		fmt.Printf("client: error making http request: %s\n", err)
 		return err
@@ -45,8 +52,8 @@ func rpcGet(data RpcGetRequestArgs, response *map[string]interface{}) error {
 	return json.Unmarshal(resBody, response)
 }
 
-func GetDeviceStateRPC(baseUrl string, spec DeviceSpec) (DeviceState, error) {
-	switches := make([]SwitchState, spec.SwitchCount)
+func GetDeviceStateRPC(baseUrl string, spec pkg.DeviceSpec) (pkg.DeviceState, error) {
+	switches := make([]pkg.SwitchState, spec.SwitchCount)
 	for i := 0; i < spec.SwitchCount; i++ {
 		var response map[string]interface{}
 		err := rpcGet(RpcGetRequestArgs{
@@ -55,7 +62,7 @@ func GetDeviceStateRPC(baseUrl string, spec DeviceSpec) (DeviceState, error) {
 			Args:   fmt.Sprintf("?id=%d", i),
 		}, &response)
 		if err != nil {
-			switches[i] = SwitchState{
+			switches[i] = pkg.SwitchState{
 				Online: false,
 			}
 			continue
@@ -63,13 +70,29 @@ func GetDeviceStateRPC(baseUrl string, spec DeviceSpec) (DeviceState, error) {
 
 		//fmt.Printf("client: response: %v\n", response)
 
-		switches[i] = SwitchState{
+		switches[i] = pkg.SwitchState{
 			Online: true,
 			IsOn:   response["output"].(bool),
 		}
 	}
 
-	return DeviceState{
+	return pkg.DeviceState{
 		Switches: switches,
 	}, nil
+}
+
+func SetSwitchStateRPC(baseUrl string, switchIndex string, state bool) error {
+	var response map[string]interface{}
+	err := rpcGet(RpcGetRequestArgs{
+		Ip:     baseUrl,
+		Method: "Switch.Set",
+		Args:   fmt.Sprintf("?id=%s&on=%t", switchIndex, state),
+	}, &response)
+	if err != nil {
+		return err
+	}
+
+	//fmt.Printf("client: response: %v\n", response)
+
+	return nil
 }
