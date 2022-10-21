@@ -1,4 +1,4 @@
-package devices
+package id
 
 import (
 	"github.com/go-redis/redis/v9"
