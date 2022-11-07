@@ -27,4 +27,8 @@ var DeviceTypes = map[string]DeviceSpec{
 		Protocol:    "RPC",
 		SwitchCount: 1,
 	},
+	"SHDUO": DeviceSpec{
+		Protocol:   "REST",
+		LightCount: 1,
+	},
 }
