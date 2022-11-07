@@ -10,4 +10,5 @@ func SetupDeviceId(router fiber.Router) {
 	router.Delete("/devices/:id", deleteDeviceRoute())
 
 	router.Get("/devices/:id/switch", switchRoute)
+	router.Get("/devices/:id/light", lightRoute)
 }
