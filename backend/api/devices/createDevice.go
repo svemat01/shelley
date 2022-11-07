@@ -9,6 +9,8 @@ import (
 
 func createDeviceRoute() func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
+		// TODO check if device is valid type
+
 		contentType := c.Get("Content-Type")
 
 		if contentType != "application/json" {
