@@ -7,6 +7,7 @@ import (
 
 func SetupDevices(router fiber.Router) {
 	router.Get("/devices/list", listDevicesRoute())
+	router.Get("/devices/all", allDevicesRoute())
 
 	router.Post("/devices/create", createDeviceRoute())
 
