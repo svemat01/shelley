@@ -1,19 +1,20 @@
 package main
 
 import (
+	"log"
+
 	"github.com/joho/godotenv"
 	"github.com/svemat01/shelley/api"
 	"github.com/svemat01/shelley/redisDB"
 	"github.com/svemat01/shelley/server"
 	"github.com/svemat01/shelley/state"
-	"log"
 )
 
 func main() {
 	// Setup Env
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatal("Error loading .env file")
+		log.Println("No .env file found")
 	}
 
 	// Setup Redis
