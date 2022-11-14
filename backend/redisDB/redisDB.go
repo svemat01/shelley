@@ -2,9 +2,11 @@ package redisDB
 
 import (
 	"context"
-	"github.com/go-redis/redis/v9"
 	"log"
 	"os"
+	"time"
+
+	"github.com/go-redis/redis/v9"
 )
 
 var RedisContext = context.Background()
@@ -20,9 +22,28 @@ func Setup() {
 	})
 
 	log.Println("Connecting to redis")
-	if _, err := RedisClient.Ping(RedisContext).Result(); err != nil {
+	continueChecking := true
+	tried := 0
 
-		log.Fatal("Can't connect to redis")
+	for continueChecking {
+		_, err := RedisClient.Ping(RedisContext).Result()
+		if err != nil {
+			log.Println("Error connecting to redis")
+			log.Println(err)
+		} else {
+			log.Println("Connected to redis")
+			continueChecking = false
+			break
+		}
+
+		if tried > 10 {
+			log.Println("Tried to many times, Exiting...")
+			os.Exit(1)
+		}
+
+		tried++
+
+		log.Println("Trying again in 10 seconds")
+		time.Sleep(10 * time.Second)
 	}
-	log.Println("Connected to redis")
 }
