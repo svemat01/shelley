@@ -23,3 +23,20 @@ func SetDeviceState(deviceId string, state pkg.DeviceState) error {
 
 	return nil
 }
+
+func GetDeviceState(deviceId string) (pkg.DeviceState, error) {
+	val, err := RedisClient.Get(RedisContext, "state:"+deviceId).Result()
+
+	if err != nil {
+		return pkg.DeviceState{}, err
+	}
+
+	var state pkg.DeviceState
+	err = json.Unmarshal([]byte(val), &state)
+
+	if err != nil {
+		return pkg.DeviceState{}, err
+	}
+
+	return state, nil
+}

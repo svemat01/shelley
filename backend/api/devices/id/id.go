@@ -6,6 +6,7 @@ import (
 
 func SetupDeviceId(router fiber.Router) {
 	router.Get("/devices/:id", getDeviceRoute())
+	router.Get("/devices/:id/state", getStateRoute())
 
 	router.Delete("/devices/:id", deleteDeviceRoute())
 

@@ -18,6 +18,28 @@ func GetDeviceState(device redisDB.Device) (pkg.DeviceState, error) {
 	}
 }
 
+func UpdateDeviceState(deviceId string) error {
+	device, err := redisDB.GetDevice(deviceId)
+
+	if err != nil {
+		return err
+	}
+
+	deviceState, err := GetDeviceState(device)
+
+	if err != nil {
+		return err
+	}
+
+	err = redisDB.SetDeviceState(deviceId, deviceState)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func SetSwitchState(deviceId string, switchIndex string, state bool) error {
 	// TODO check if device type has switch
 	device, err := redisDB.GetDevice(deviceId)
@@ -30,12 +52,30 @@ func SetSwitchState(deviceId string, switchIndex string, state bool) error {
 
 	switch deviceSpec.Protocol {
 	case "RPC":
-		return SetSwitchStateRPC(device.Ip, switchIndex, state)
+		err = SetSwitchStateRPC(device.Ip, switchIndex, state)
+		if err != nil {
+			return err
+		}
+
+		err = UpdateDeviceState(deviceId)
+		if err != nil {
+			return err
+		}
 	case "REST":
-		return SetSwitchStateREST(device.Ip, switchIndex, state)
+		err = SetSwitchStateREST(device.Ip, switchIndex, state)
+		if err != nil {
+			return err
+		}
+
+		err = UpdateDeviceState(deviceId)
+		if err != nil {
+			return err
+		}
 	default:
 		return InvalidShellyType(device.Type)
 	}
+
+	return nil
 }
 
 func SetLightState(deviceId string, lightIndex string, state bool, brightness int) error {
@@ -50,10 +90,28 @@ func SetLightState(deviceId string, lightIndex string, state bool, brightness in
 
 	switch deviceSpec.Protocol {
 	case "RPC":
-		return SetLightStateRPC(device.Ip, lightIndex, state, brightness)
+		err = SetLightStateRPC(device.Ip, lightIndex, state, brightness)
+		if err != nil {
+			return err
+		}
+
+		err = UpdateDeviceState(deviceId)
+		if err != nil {
+			return err
+		}
 	case "REST":
-		return SetLightStateREST(device.Ip, lightIndex, state, brightness)
+		err = SetLightStateREST(device.Ip, lightIndex, state, brightness)
+		if err != nil {
+			return err
+		}
+
+		err = UpdateDeviceState(deviceId)
+		if err != nil {
+			return err
+		}
 	default:
 		return InvalidShellyType(device.Type)
 	}
+
+	return nil
 }
