@@ -1,7 +1,10 @@
 <script lang="ts">
+	import { base } from '$app/paths';
 	import { QueryClient, QueryClientProvider } from '@sveltestack/svelte-query';
-	import Header from '../components/header.svelte';
-	import { apiBaseUrl } from '../stores/api';
+	import Sidebar from '$lib/components/Sidebar/Sidebar.svelte';
+	import { apiBaseUrl } from '../lib/stores/api';
+
+	import '$lib/styles/base.scss'
 
 	const queryClient = new QueryClient();
 
@@ -17,7 +20,8 @@
 </script>
 
 <QueryClientProvider client={queryClient}>
-	<Header />
+	<div class="flex">
+		<Sidebar />
 	{#if $apiBaseUrl}
 		<slot />
 	{:else if !validUrl}
@@ -25,4 +29,5 @@
     {:else}
         Loading...
 	{/if}
+	</div>
 </QueryClientProvider>

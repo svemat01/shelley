@@ -1,9 +1,10 @@
 <script lang="ts">
 	// Example.svelte
 	import { Queries, useQueries, useQuery, type UseQueryStoreResult } from '@sveltestack/svelte-query';
-	import Device from '../components/device.svelte';
 	import type { DeviceData } from '../types/device';
-	import { apiBaseUrl } from '../stores/api';
+	import { apiBaseUrl } from '$lib/stores/api';
+
+	import Device from '$lib/components/Device.svelte';
 
 	let devicesQuery: UseQueryStoreResult<Record<string, DeviceData>, unknown, Record<string, DeviceData>, "devices">
 
@@ -13,7 +14,6 @@
 		)
 	);
 </script>
-
 
 {#if $devicesQuery.isLoading}
 	<p>Loading...</p>

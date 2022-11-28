@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { useQuery } from '@sveltestack/svelte-query';
 	import type { DeviceData, DeviceState } from '../types/device';
-	import Light from './light.svelte';
-	import Switch from './switch.svelte';
+	import Light from './Light.svelte';
+	import Switch from './Switch.svelte';
 
 	export let device: DeviceData;
 	export let id: string;
