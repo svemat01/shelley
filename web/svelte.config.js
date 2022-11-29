@@ -5,7 +5,11 @@ import preprocess from 'svelte-preprocess';
 const config = {
 	// Consult https://github.com/sveltejs/svelte-preprocess
 	// for more information about preprocessors
-	preprocess: preprocess(),
+	preprocess: preprocess({
+		scss: {
+			prependData: '@use "src/lib/styles/variables.scss" as *;'
+		}
+	}),
 
 	kit: {
 		adapter: adapter({
@@ -18,7 +22,7 @@ const config = {
 			fallback: '200.html'
 		}),
 		prerender: { entries: [] }
-	}
+	},
 };
 
 export default config;

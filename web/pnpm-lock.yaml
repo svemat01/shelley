@@ -1,6 +1,9 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@fortawesome/fontawesome-common-types': ^6.2.1
+  '@fortawesome/free-regular-svg-icons': ^6.2.1
+  '@fortawesome/free-solid-svg-icons': ^6.2.1
   '@macfja/svelte-persistent-store': ^2.2.1
   '@sveltejs/adapter-static': 1.0.0-next.48
   '@sveltejs/kit': next
@@ -15,15 +18,19 @@ specifiers:
   sass: ^1.56.1
   svelte: ^3.44.0
   svelte-check: ^2.7.1
+  svelte-fa: ^3.0.3
   svelte-preprocess: ^4.10.6
   tslib: ^2.3.1
   typescript: ^4.7.4
   vite: ^3.1.0
 
 devDependencies:
+  '@fortawesome/fontawesome-common-types': 6.2.1
+  '@fortawesome/free-regular-svg-icons': 6.2.1
+  '@fortawesome/free-solid-svg-icons': 6.2.1
   '@macfja/svelte-persistent-store': 2.2.1_svelte@3.52.0
   '@sveltejs/adapter-static': 1.0.0-next.48
-  '@sveltejs/kit': 1.0.0-next.564_svelte@3.52.0+vite@3.2.3
+  '@sveltejs/kit': 1.0.0-next.567_svelte@3.52.0+vite@3.2.3
   '@sveltestack/svelte-query': 1.6.0
   '@typescript-eslint/eslint-plugin': 5.42.1_2udltptbznfmezdozpdoa2aemq
   '@typescript-eslint/parser': 5.42.1_rmayb2veg2btbq6mbmnyivgasy
@@ -35,6 +42,7 @@ devDependencies:
   sass: 1.56.1
   svelte: 3.52.0
   svelte-check: 2.9.2_sass@1.56.1+svelte@3.52.0
+  svelte-fa: 3.0.3
   svelte-preprocess: 4.10.7_22by2neqo4zs75eedhqxyik53e
   tslib: 2.4.1
   typescript: 4.8.4
@@ -75,6 +83,28 @@ packages:
       strip-json-comments: 3.1.1
     transitivePeerDependencies:
       - supports-color
+    dev: true
+
+  /@fortawesome/fontawesome-common-types/6.2.1:
+    resolution: {integrity: sha512-Sz07mnQrTekFWLz5BMjOzHl/+NooTdW8F8kDQxjWwbpOJcnoSg4vUDng8d/WR1wOxM0O+CY9Zw0nR054riNYtQ==}
+    engines: {node: '>=6'}
+    requiresBuild: true
+    dev: true
+
+  /@fortawesome/free-regular-svg-icons/6.2.1:
+    resolution: {integrity: sha512-wiqcNDNom75x+pe88FclpKz7aOSqS2lOivZeicMV5KRwOAeypxEYWAK/0v+7r+LrEY30+qzh8r2XDaEHvoLsMA==}
+    engines: {node: '>=6'}
+    requiresBuild: true
+    dependencies:
+      '@fortawesome/fontawesome-common-types': 6.2.1
+    dev: true
+
+  /@fortawesome/free-solid-svg-icons/6.2.1:
+    resolution: {integrity: sha512-oKuqrP5jbfEPJWTij4sM+/RvgX+RMFwx3QZCZcK9PrBDgxC35zuc7AOFsyMjMd/PIFPeB2JxyqDr5zs/DZFPPw==}
+    engines: {node: '>=6'}
+    requiresBuild: true
+    dependencies:
+      '@fortawesome/fontawesome-common-types': 6.2.1
     dev: true
 
   /@humanwhocodes/config-array/0.11.7:
@@ -159,8 +189,8 @@ packages:
     resolution: {integrity: sha512-Z5Z+QZOav6D0KDeU3ReksGERJg/sX1k5OKWWXyQ11OwGErEEwSXHYRUyjaBmZEPeGzpVVGwwMUK8YWJlG/MKeA==}
     dev: true
 
-  /@sveltejs/kit/1.0.0-next.564_svelte@3.52.0+vite@3.2.3:
-    resolution: {integrity: sha512-j5X8NVA+ros3YDaybsrybnsZasrsMKacAhLGll36SGkBDagCQANlY6O5B7fxP0FrejiuN6ZLh0hnROGsl5qAlQ==}
+  /@sveltejs/kit/1.0.0-next.567_svelte@3.52.0+vite@3.2.3:
+    resolution: {integrity: sha512-4Q74HPLZb9Rr60n7EJANXH2Ng3d7wwrz67TuXxVfYuxARigWO9YzjcLHxG2IVMwRZIeT+LlwOKkg9vYYdBiezQ==}
     engines: {node: '>=16.14'}
     hasBin: true
     requiresBuild: true
@@ -1625,6 +1655,10 @@ packages:
       - sass
       - stylus
       - sugarss
+    dev: true
+
+  /svelte-fa/3.0.3:
+    resolution: {integrity: sha512-GIikJjcVCD+5Y/x9hZc2R4gvuA0gVftacuWu1a+zVQWSFjFYZ+hhU825x+QNs2slsppfrgmFiUyU9Sz9gj4Rdw==}
     dev: true
 
   /svelte-hmr/0.15.1_svelte@3.52.0:
