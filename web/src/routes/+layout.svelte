@@ -1,11 +1,10 @@
 <script lang="ts">
-	import { base } from '$app/paths';
 	import { QueryClient, QueryClientProvider } from '@sveltestack/svelte-query';
 	import Sidebar from '$lib/components/Sidebar/Sidebar.svelte';
-	import Footer from '$lib/components/Footer/Footer.svelte';
 	import { apiBaseUrl } from '../lib/stores/api';
 
 	import '$lib/styles/base.scss';
+	import { sidebar } from '$lib/stores/sidebar';
 
 	const queryClient = new QueryClient();
 
@@ -21,7 +20,7 @@
 </script>
 
 <QueryClientProvider client={queryClient}>
-	<main class="container">
+	<main class="container" class:collapsed={!$sidebar}>
 		<Sidebar />
 		<section>
 			{#if $apiBaseUrl}
@@ -32,7 +31,7 @@
 				Loading...
 			{/if}
 		</section>
-		<Footer />
+		<!-- <Footer /> -->
 	</main>
 </QueryClientProvider>
 
@@ -41,12 +40,16 @@
 		display: grid;
 
 		grid-template-columns: 300px 1fr;
-		grid-template-rows: 1fr 50px;
-		grid-template-areas:
-			'sidebar main'
-			'sidebar footer';
+		/* grid-template-rows: 1fr 50px; */
+		grid-template-rows: 1fr;
+		grid-template-areas: 'sidebar main';
+		/* 'sidebar footer'; */
 
 		height: 100vh;
+
+		&.collapsed {
+			grid-template-columns: 80px 1fr;
+		}
 	}
 
 	section {
