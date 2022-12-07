@@ -1,10 +1,12 @@
 <script lang="ts">
+	import type { PageData } from './$types';
 	import { QueryClient, QueryClientProvider } from '@sveltestack/svelte-query';
 	import Sidebar from '$lib/components/Sidebar/Sidebar.svelte';
 	import { apiBaseUrl } from '../lib/stores/api';
 
 	import '$lib/styles/base.scss';
-	import { sidebar } from '$lib/stores/sidebar';
+
+	export let data: PageData;
 
 	const queryClient = new QueryClient();
 
@@ -20,8 +22,8 @@
 </script>
 
 <QueryClientProvider client={queryClient}>
-	<main class="container" class:collapsed={!$sidebar}>
-		<Sidebar />
+	<main class="container">
+		<Sidebar version={data.version} />
 		<section>
 			{#if $apiBaseUrl}
 				<slot />
@@ -47,7 +49,7 @@
 
 		height: 100vh;
 
-		&.collapsed {
+		@media (max-width: $tablet) {
 			grid-template-columns: 80px 1fr;
 		}
 	}

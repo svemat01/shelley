@@ -3,20 +3,19 @@
 	import type { IconDefinition } from '@fortawesome/fontawesome-common-types';
 	import { page } from '$app/stores';
 	import { fade } from 'svelte/transition';
-	import { sidebar } from '$lib/stores/sidebar';
 
 	export let url: string;
 	export let title: string;
-	export let icon: IconDefinition | undefined = undefined;
+	export let icon: IconDefinition;
 </script>
 
-<a href={url} class:selected={url == $page.route.id} transition:fade class:collapsed={!$sidebar}>
-	{#if icon}
-		<Fa {icon} size="md" />
-	{/if}
-	{#if $sidebar || !icon}
+<a href={url} class:selected={url == $page.route.id} transition:fade>
+	<div class="icon">
+		<Fa {icon} size="sm" />
+	</div>
+	<div class="text">
 		{title}
-	{/if}
+	</div>
 </a>
 
 <style lang="scss">
@@ -33,6 +32,11 @@
 
 		transition: all 0.2s ease-in-out;
 
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.8rem;
+
 		&.selected {
 			color: $primary-color;
 
@@ -40,15 +44,23 @@
 			/* border: $light-color solid 3px; */
 		}
 
-        &.collapsed {
-            padding: 0.2rem 0.2rem;
-            aspect-ratio: 1 / 1;
+		@media (max-width: $tablet) {
+			padding: 0.2rem 0.2rem;
+			aspect-ratio: 1 / 1;
 
-            display: flex;
-            align-items: center;
-            justify-content: center;
+			display: flex;
+			align-items: center;
+			justify-content: center;
 
-            font-size: 100%;
-        }
+			.text {
+				display: none;
+
+				font-size: 1.3rem;
+			}
+
+			.icon {
+				font-size: 1.8rem;
+			}
+		}
 	}
 </style>

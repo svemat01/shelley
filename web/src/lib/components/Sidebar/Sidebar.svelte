@@ -2,35 +2,30 @@
 	import shelley from '$lib/images/shelley.svg';
 	import NavButton from './NavButton.svelte';
 	import { faHouse } from '@fortawesome/free-solid-svg-icons';
-	import CloseButton from './ToggleButton.svelte';
-	import { sidebar } from '$lib/stores/sidebar';
 	import { fade } from 'svelte/transition';
 
-	const open = () => {
-		sidebar.set(true);
-	};
+	export let version: string;
 </script>
 
-<aside class:collapsed={!$sidebar} transition:fade>
+<aside transition:fade>
 	<!-- {#if $sidebar}
 		<CloseButton on:click={() => ($sidebar = false)} />
 	{/if} -->
 
-	<section class="top" on:click={() => ($sidebar = !$sidebar)}>
+	<section class="top">
 		<img src={shelley} alt="shelley icon" width="50px" />
-		{#if $sidebar}
-			<h1>Shelley</h1>
-		{/if}
+		<h1>Shelley</h1>
 	</section>
 	<div class="divider" />
 
 	<section class="main">
 		<NavButton url="/" title="Home" icon={faHouse} />
-		<NavButton url="/test" title="TEST" />
+		<NavButton url="/test" title="TEST" icon={faHouse} />
 	</section>
 
 	<section class="footer">
 		<p>Made by Jakob Helgesson</p>
+		<p>Version: {version}</p>
 	</section>
 </aside>
 
@@ -54,22 +49,26 @@
 		& > section {
 			padding-inline: 1.2rem;
 		}
-	}
 
-	.collapsed {
-		/* padding: 0.8rem 0.8rem; */
-		padding-top: 0.8rem;
+		@media (max-width: $tablet) {
+			/* padding: 0.8rem 0.8rem; */
+			padding-top: 0.8rem;
 
-		& > section {
-			padding-inline: 0.2rem;
-		}
+			& > section {
+				padding-inline: 0.2rem;
+			}
 
-		.top {
-			justify-content: center;
-		}
+			.top {
+				justify-content: center;
 
-		.footer {
-			display: none;
+				& > h1 {
+					display: none;
+				}
+			}
+
+			.footer {
+				display: none;
+			}
 		}
 	}
 
@@ -106,6 +105,7 @@
 
 	.footer {
 		display: flex;
+		flex-direction: column;
 		justify-content: center;
 		align-items: center;
 
