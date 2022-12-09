@@ -41,18 +41,18 @@
 	);
 
 	let timer: ReturnType<typeof setTimeout>;
-	
+
 	const debounce = () => {
 		clearTimeout(timer);
 		timer = setTimeout(() => {
 			$mutation.mutate();
 			console.log({
-					on: brightness[0] > 0,
-					brightness: brightness[0],
-					light: lightId.toString()
-				})
+				on: brightness[0] > 0,
+				brightness: brightness[0],
+				light: lightId.toString()
+			});
 		}, 500);
-	}
+	};
 </script>
 
 <!-- <div class="base-card card">
@@ -68,45 +68,41 @@
 </div> -->
 
 <div class="base-card card">
-	<div class="icon">
-		<Fa
-			icon={faLightbulb}
-			color={'#FA9F42'}
-			style={`filter: brightness(${brightness[0] > 0 ? brightness[0] * 0.8 + 20: 0}%)`}
-			size="2x"
-		/>
+	<div class="top">
+		<div class="icon">
+			<Fa
+				icon={faLightbulb}
+				color={'#FA9F42'}
+				style={`filter: brightness(${brightness[0] > 0 ? brightness[0] * 0.8 + 20 : 0}%)`}
+				size="2x"
+			/>
+		</div>
+		<h2>Light {lightId}</h2>
 	</div>
-	<h2>Light {lightId}</h2>
 	<div class="test">
-		<RangeSlider min={0} max={100} bind:values={brightness} on:change={debounce}/></div>
-	<button
-		on:click={() => {
-			const inputBrightness = prompt('Enter brightness (0-100):');
-			if (inputBrightness) {
-				const tempBrightness = parseInt(inputBrightness);
-				if (tempBrightness >= 0 && tempBrightness <= 100) {
-					brightness[0] = tempBrightness;
-					$mutation.mutate();
-				} else {
-					alert('Brightness must be between 0 and 100');
-				}
-			} else {
-				alert('Invalid brightness');
-				return;
-			}
-		}}>Brightness</button
-	>
+		<RangeSlider min={0} max={100} bind:values={brightness} on:change={debounce} />
+	</div>
 </div>
 
 <style lang="scss">
 	.card {
 		display: flex;
 		flex-direction: column;
+		flex-wrap: wrap;
 		align-items: center;
 		gap: 1rem;
 	}
 
+	.top {
+		width: 100%;
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+		flex: 1;
+	}
+
 	.test {
 		width: 100%;
+		flex: 1;
 	}
 </style>

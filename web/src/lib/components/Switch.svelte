@@ -37,7 +37,7 @@
 
 <div class="base-card card" on:click={toggle} on:keyup={toggle}>
 	<div class="icon">
-		<Fa icon={faBoltLightning} color={state.ison ? '#FA9F42' : '#1b2347'} size="2x" />
+		<Fa icon={faBoltLightning} color={state.ison ? '#FA9F42' : '#000000'} size="2x" />
 	</div>
 	<h2>Switch {switchId}</h2>
 </div>
@@ -47,5 +47,8 @@
 		display: flex;
 		align-items: center;
 		gap: 1rem;
+	}
+	.icon :global(svg) {
+		cursor: pointer;
 	}
 </style>

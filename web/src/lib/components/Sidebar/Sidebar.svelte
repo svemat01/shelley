@@ -1,7 +1,7 @@
 <script lang="ts">
 	import shelley from '$lib/images/shelley.svg';
 	import NavButton from './NavButton.svelte';
-	import { faHouse } from '@fortawesome/free-solid-svg-icons';
+	import { faGear, faHouse } from '@fortawesome/free-solid-svg-icons';
 	import { fade } from 'svelte/transition';
 
 	export let version: string;
@@ -20,7 +20,7 @@
 
 	<section class="main">
 		<NavButton url="/" title="Home" icon={faHouse} />
-		<NavButton url="/test" title="TEST" icon={faHouse} />
+		<NavButton url="/settings" title="Settings" icon={faGear} />
 	</section>
 
 	<section class="footer">

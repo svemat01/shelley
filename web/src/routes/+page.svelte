@@ -43,11 +43,14 @@
 <style lang="scss">
 	.devices {
 		display: grid;
-		grid-template-columns: repeat(3, 1fr);
-		gap: 1rem;
+		grid-template-columns: repeat(4, 1fr);
+		gap: 2rem;
 
-		padding: 1rem;
+		padding: 2rem;
 
+		@media (max-width: $desktop-large) {
+			grid-template-columns: repeat(3, 1fr);
+		}
 		@media (max-width: $desktop) {
 			grid-template-columns: repeat(2, 1fr);
 		}
