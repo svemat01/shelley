@@ -61,6 +61,10 @@
 			.top {
 				justify-content: center;
 
+				& > img {
+					width: 40px;
+				}
+
 				& > h1 {
 					display: none;
 				}

@@ -15,6 +15,8 @@
 			(res) => res.json() as Promise<DeviceState>
 		), {staleTime: 2000}
 	);
+
+	$: console.log($deviceQuery);
 </script>
 
 <div class="device">

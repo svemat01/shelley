@@ -23,25 +23,40 @@
 			(res) => res.json() as Promise<Record<string, DeviceData>>
 		)
 	);
+
+	$: console.log($devicesQuery);
+
+	let validUrl = false;
+	$: {
+		try {
+			new URL($apiBaseUrl);
+			validUrl = true;
+		} catch {
+			validUrl = false;
+		}
+	}
 </script>
 
-{#if $devicesQuery.isLoading}
-	<div class="loading">
-		<p>Loading...</p>
-	</div>
-{:else if $devicesQuery.isError}
-	<p>Error: {$devicesQuery.error.message}</p>
-{:else if $devicesQuery.isSuccess}
-	<div class="devices">
-		{#each Object.entries($devicesQuery.data) as [id, device]}
-			<Device {device} {id} />
-		{/each}
-	</div>
-{/if}
-
+<div class="base">
+	{#if validUrl}
+		{#if $devicesQuery.isLoading}
+			<div class="base-card">
+				<p>Loading...</p>
+			</div>
+		{:else if $devicesQuery.isError}
+			<p>Error: {$devicesQuery.error.message}</p>
+		{:else if $devicesQuery.isSuccess}
+			{#each Object.entries($devicesQuery.data) as [id, device]}
+				<Device {device} {id} />
+			{/each}
+		{/if}
+	{:else}
+	<div class="base-card">Invalid URL</div>
+	{/if}
+</div>
 
 <style lang="scss">
-	.devices {
+	.base {
 		display: grid;
 		grid-template-columns: repeat(4, 1fr);
 		gap: 2rem;
@@ -56,6 +71,7 @@
 		}
 		@media (max-width: $tablet) {
 			grid-template-columns: 1fr;
+			padding: 1rem;
 		}
 	}
 </style>

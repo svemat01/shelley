@@ -2,36 +2,19 @@
 	import type { PageData } from './$types';
 	import { QueryClient, QueryClientProvider } from '@sveltestack/svelte-query';
 	import Sidebar from '$lib/components/Sidebar/Sidebar.svelte';
-	import { apiBaseUrl } from '../lib/stores/api';
 
 	import '$lib/styles/base.scss';
 
 	export let data: PageData;
 
 	const queryClient = new QueryClient();
-
-	let validUrl = false;
-	$: {
-		try {
-			new URL($apiBaseUrl);
-			validUrl = true;
-		} catch {
-			validUrl = false;
-		}
-	}
 </script>
 
 <QueryClientProvider client={queryClient}>
 	<main class="container">
 		<Sidebar version={data.version} />
 		<section>
-			{#if $apiBaseUrl}
-				<slot />
-			{:else if !validUrl}
-				Invalid baseurl
-			{:else}
-				Loading...
-			{/if}
+			<slot />
 		</section>
 		<!-- <Footer /> -->
 	</main>
@@ -50,7 +33,7 @@
 		height: 100vh;
 
 		@media (max-width: $tablet) {
-			grid-template-columns: 80px 1fr;
+			grid-template-columns: 60px 1fr;
 		}
 	}
 
